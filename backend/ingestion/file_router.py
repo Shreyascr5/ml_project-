@@ -1,9 +1,9 @@
 import os
 
-from ingestion.csv_parser import parse_csv
-from ingestion.excel_parser import parse_excel
-from ingestion.pdf_parser import parse_pdf
-from ingestion.image_parser import parse_image
+from backend.ingestion.csv_parser import parse_csv
+from backend.ingestion.excel_parser import parse_excel
+from backend.ingestion.pdf_parser import parse_pdf
+from backend.ingestion.image_parser import parse_image
 
 
 def parse_file(file_path):
