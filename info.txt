@@ -1,0 +1,20 @@
+4 datasets → clean each → merge features → add year → concatenate → model
+
+
+🎯 Recommended Plan (VERY IMPORTANT)
+🥇 Step 1 (Continue current)
+
+✔ Add colleges
+✔ Add faculty
+✔ Build strong model (single year)
+
+🥈 Step 2 (Upgrade)
+
+✔ Repeat pipeline for all 4 years
+✔ Add year column
+✔ Concatenate datasets
+
+🥉 Step 3 (Final Model)
+
+✔ Train on combined data
+✔ Compare performance

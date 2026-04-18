@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error, r2_score
 
 # Define file path
 file = "data/AISHE Final Report 2019-20.xlsx"
@@ -131,6 +132,23 @@ df_uni = df_uni.dropna(subset=["universities"])
 
 # print(df_uni.head())
 # print("\nShape:", df_uni.shape)
+
+
+#merge with final data 
+
+df_final=pd.merge(df_final, df_uni, on="state")
+
+print(df_final.head())
+print("\nShape:", df_final.shape)
+
+X=df_final[["students", "universities"]]
+y=df_final["ger"]
+
+mae = mean_absolute_error(y_test, predictions)
+r2 = r2_score(y_test, predictions)
+
+print("MAE:", mae)
+print("R2:", r2)
 
 
 
