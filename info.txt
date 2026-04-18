@@ -1,20 +1,56 @@
-4 datasets → clean each → merge features → add year → concatenate → model
+🥇 Phase 1: Single-Year (2019–20) → “Prototype”
 
+Use this to:
 
-🎯 Recommended Plan (VERY IMPORTANT)
-🥇 Step 1 (Continue current)
+Fix data cleaning issues
+Understand AISHE structure
+Build pipeline end-to-end
+Debug everything
 
-✔ Add colleges
-✔ Add faculty
-✔ Build strong model (single year)
+👉 This is what you’re doing now
 
-🥈 Step 2 (Upgrade)
+🥈 Phase 2: Strengthen Model (still single-year)
 
-✔ Repeat pipeline for all 4 years
-✔ Add year column
-✔ Concatenate datasets
+Add:
 
-🥉 Step 3 (Final Model)
+Colleges
+Faculty
+Better evaluation
 
-✔ Train on combined data
-✔ Compare performance
+👉 Get a working, stable model
+
+🥉 Phase 3: Multi-Year Expansion (IMPORTANT)
+
+Then:
+
+2018–19  
+2019–20  
+2020–21  
+2021–22
+
+👉 Combine into one dataset
+
+🚀 Final Pipeline (What You Should Aim For)
+FOR each year:
+    extract GER
+    extract students
+    extract universities
+    extract colleges
+    extract faculty
+    merge → yearly dataset
+    add column: year
+
+Concatenate all years → final dataset
+Train model
+🧠 Why Not Start Multi-Year Immediately?
+
+Because:
+
+AISHE data = messy + inconsistent
+
+If you jump early:
+
+You’ll face 4x errors
+Debugging becomes chaos
+🧠 Why This Works Better
+First fix logic → then scale data
