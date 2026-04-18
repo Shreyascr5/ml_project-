@@ -100,12 +100,37 @@ model.fit(X_train,y_train)
 
 predictions= model.predict(X_test)
 
-print("\nPredictings:\n", predictions)
+# print("\nPredictings:\n", predictions)
 
-print("\nActual values:")
-print(y_test.values)
+# print("\nActual values:")
+# print(y_test.values)
 
 
+
+#universities data:
+
+df_uni = pd.read_excel(file, sheet_name="40NoUni", skiprows=3, header=None)
+
+# Assign proper column names manually
+df_uni.columns = [ "state", "y1", "y2", "y3", "y4","universities"]
+
+# Keep only needed columns
+df_uni = df_uni[["state", "universities"]]
+
+# Remove junk rows
+df_uni = df_uni[df_uni["state"].notna()]
+df_uni["state"] = df_uni["state"].astype(str)
+
+df_uni = df_uni[~df_uni["state"].str.contains("India", case=False, na=False)]
+df_uni = df_uni[~df_uni["state"].str.isnumeric()]
+
+# Convert to numeric
+df_uni["universities"] = pd.to_numeric(df_uni["universities"], errors="coerce")
+
+df_uni = df_uni.dropna(subset=["universities"])
+
+# print(df_uni.head())
+# print("\nShape:", df_uni.shape)
 
 
 
