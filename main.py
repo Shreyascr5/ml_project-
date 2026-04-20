@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error, r2_score
+import numpy as np  
 
 # Define file path
 file = "data/AISHE Final Report 2019-20.xlsx"
@@ -150,6 +151,11 @@ r2 = r2_score(y_test, predictions)
 print("MAE:", mae)
 print("R2:", r2)
 
+
+#percentage error
+
+mape = np.mean(np.abs((y_test - predictions) / y_test)) * 100
+print("MAPE:", mape)
 
 
 

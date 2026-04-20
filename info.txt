@@ -54,3 +54,8 @@ You’ll face 4x errors
 Debugging becomes chaos
 🧠 Why This Works Better
 First fix logic → then scale data
+
+
+got MAE=9.9967
+R2=0.07084
+MAPE= 51.42% Means that the model's predictions are 51.42% away from the true values, (indicates limited percentage-level accuracy)
