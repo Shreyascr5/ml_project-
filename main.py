@@ -149,3 +149,39 @@ importance = model.feature_importances_
 
 print("\nFeature Importance:")
 print(pd.Series(importance, index=X.columns).sort_values(ascending=False))
+
+
+#Feature selection 
+
+from itertools import combinations
+from sklearn.metrics import r2_score
+
+features = ["students", "universities", "faculty", "year"]
+
+best_score = -999
+best_features = None
+
+for i in range(1, len(features)+1):
+    for combo in combinations(features, i):
+        
+        X = df_final[list(combo)]
+        y = df_final["ger"]
+
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+
+        model = RandomForestRegressor(n_estimators=100, random_state=42)
+        model.fit(X_train, y_train)
+
+        predictions = model.predict(X_test)
+        score = r2_score(y_test, predictions)
+
+        print(f"{combo} → R2: {score}")
+
+        if score > best_score:
+            best_score = score
+            best_features = combo
+
+print("\nBEST FEATURE SET:", best_features)
+print("BEST R2:", best_score)

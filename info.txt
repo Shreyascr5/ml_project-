@@ -286,4 +286,122 @@ universities → tens
 
 #added year feature to the pipeline for future works
 
+instead of manually checking the feature importance we used feature selection method which provides r2 and best feature set :
+output:((.venv) ) shreyascr5@Shreyass-MacBook-Air ml_project- % python3 main.py
+
+Final Dataset:
+               state        ger  students  universities  faculty  year
+0     Andhra Pradesh  29.377119   1897149            41    99737  2019
+1  Arunachal Pradesh  35.211870     55816            10     2004  2019
+2              Assam  22.545777    650601            26    23080  2019
+3              Bihar  21.444663   1738432            35    29597  2019
+4       Chhattisgarh  11.763714    586395            28    22235  2019
+
+Shape: (28, 6)
+
+Features used: Index(['students', 'universities', 'faculty', 'year'], dtype='str')
+
+--- FINAL MODEL PERFORMANCE ---
+MAE: 11.429833547483774
+R2: -0.24103965372122094
+MAPE: 63.49914482137235
+
+Feature Importance:
+universities    0.474630
+faculty         0.305953
+students        0.219418
+year            0.000000
+dtype: float64
+('students',) → R2: -0.6429606955714451
+('universities',) → R2: -0.24892821447896551
+('faculty',) → R2: -1.3121370034834112
+('year',) → R2: -0.016264704782377404
+('students', 'universities') → R2: -0.04135832397184047
+('students', 'faculty') → R2: -0.8007553436744017
+('students', 'year') → R2: -0.6429606955714451
+('universities', 'faculty') → R2: -0.404276190637308
+('universities', 'year') → R2: -0.24892821447896551
+('faculty', 'year') → R2: -1.3121370034834112
+('students', 'universities', 'faculty') → R2: -0.2238614325746271
+('students', 'universities', 'year') → R2: -0.007779832151517008
+('students', 'faculty', 'year') → R2: -0.8099883351134158
+('universities', 'faculty', 'year') → R2: -0.457488323783543
+('students', 'universities', 'faculty', 'year') → R2: -0.24103965372122094
+
+BEST FEATURE SET: ('students', 'universities', 'year')
+BEST R2: -0.007779832151517008
+
+What This REALLY Means
+❗ 1. Your model is still not learning useful patterns
+R² ≈ 0 (slightly negative)
+
+👉 Translation:
+
+Model ≈ predicting average GER
+❗ 2. “Best feature set” is NOT actually good
+('students', 'universities', 'year')
+
+👉 Why?
+
+year = constant (2019) → useless
+faculty didn’t help (surprising but explained below)
+Key Insight (VERY IMPORTANT)
+Your problem is NOT feature selection
+Your problem is DATA
+Why even good features failed
+1. Dataset too small
+28 rows ❌
+
+👉 ML cannot generalize
+
+2. GER depends on hidden variables
+
+You’re missing:
+
+Population (CRITICAL)
+Age group (18–23)
+Socio-economic factors
+Urbanization
+3. Noise dominates signal
+
+Even good features like faculty:
+
+Got overshadowed due to small sample size
+🧠 Why “faculty didn’t help”
+
+Not because it's bad—but because:
+
+Model cannot detect relationship with only 28 points
+
+🎯 MOST IMPORTANT CONCLUSION (WRITE THIS IN REPORT)
+Feature selection alone did not significantly improve model performance due to limited dataset size and missing key explanatory variables.
+
+👉 This is a high-quality academic insight
+
+🚀 WHAT YOU SHOULD DO NEXT (CRITICAL)
+🥇 Build Multi-Year Dataset
+
+You already have:
+
+2018–19  
+2019–20  
+2020–21  
+2021–22
+
+👉 Combine them:
+
+28 × 4 = ~112 rows ✔
+🥈 Then feature selection will work
+
+Right now:
+
+Feature selection = meaningless
+
+After more data:
+
+Feature selection = powerful
+📊 What will change
+Stage	R²
+current	~0
+multi-year	0.3 – 0.7
 
