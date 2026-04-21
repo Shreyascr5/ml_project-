@@ -59,3 +59,71 @@ First fix logic → then scale data
 got MAE=9.9967
 R2=0.07084
 MAPE= 51.42% Means that the model's predictions are 51.42% away from the true values, (indicates limited percentage-level accuracy)
+
+
+Extracting colleges from sheet three: named 3Collegerange :
+🧠 IMPORTANT OBSERVATION
+
+This is NOT a simple “total colleges” column
+
+Your table is:
+
+State | distribution across ranges (0–9, 10–19, …)
+
+👉 It does NOT directly give total colleges
+
+🎯 What We Need
+
+For ML, we want:
+
+Total number of colleges per state
+🚨 Problem
+
+This sheet gives distribution, not total.
+
+Example (Andhra Pradesh):
+
+0 0 0 0 5 7 1 ...
+
+👉 You must sum across columns
+
+✅ SOLUTION
+🔹 Step 1: Clean + extract properly
+
+Use this:
+
+df_col = pd.read_excel(file, sheet_name="3Collegerange", skiprows=4, header=None)
+
+# Assign column names
+df_col.columns = ["sl_no", "state"] + [f"c{i}" for i in range(len(df_col.columns)-2)]
+
+# Keep only state + all college range columns
+df_col = df_col.drop(columns=["sl_no"])
+
+# Remove junk rows
+df_col = df_col[df_col["state"].notna()]
+df_col["state"] = df_col["state"].astype(str)
+
+df_col = df_col[~df_col["state"].str.contains("India", case=False, na=False)]
+df_col = df_col[~df_col["state"].str.isnumeric()]
+🔹 Step 2: Convert all columns to numeric
+for col in df_col.columns[1:]:
+    df_col[col] = pd.to_numeric(df_col[col], errors="coerce")
+🔹 Step 3: Compute TOTAL colleges
+df_col["colleges"] = df_col.iloc[:, 1:].sum(axis=1)
+🔹 Step 4: Final dataset
+df_col = df_col[["state", "colleges"]]
+
+print(df_col.head())
+print("\nShape:", df_col.shape)
+🎯 Expected Output
+state                        colleges
+Andhra Pradesh               XX
+Assam                        XX
+Bihar                        XX
+...
+🧠 Key Learning (VERY IMPORTANT)
+Not all datasets give direct values
+Sometimes you must DERIVE features
+
+👉 This is real feature engineering
