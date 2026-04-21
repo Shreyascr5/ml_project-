@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.ensemble import RandomForestRegressor
 
 
 # ================================
@@ -125,7 +126,7 @@ print("\nShape:", df_final.shape)
 # ================================
 
 # Features (X) and Target (y)
-X = df_final[["students", "universities", "colleges"]]
+X = df_final[["students", "universities"]]
 y = df_final["ger"]
 
 print("\nFeatures used:", X.columns)
@@ -136,7 +137,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Train model
-model = LinearRegression()
+model = RandomForestRegressor()
 model.fit(X_train, y_train)
 
 # Predict
@@ -161,5 +162,5 @@ print("MAPE:", mape)
 # ================================
 # 🔍 STEP 8: MODEL INTERPRETATION
 # ================================
-print("\nModel Coefficients:", model.coef_)
+# print("\nModel Coefficients:", model.coef_)
 print("Feature Names:", X.columns)
