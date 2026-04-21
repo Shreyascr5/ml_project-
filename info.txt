@@ -127,3 +127,163 @@ Not all datasets give direct values
 Sometimes you must DERIVE features
 
 👉 This is real feature engineering
+
+
+
+#used college as a feature:
+📊 Your Current Results
+MAE ≈ 10.9  (worse)
+R² ≈ -0.88  (very bad)
+MAPE ≈ 63%  (high error)
+🚨 What This Means
+🔴 R² = -0.88
+Model is worse than just predicting the average GER
+
+👉 This is a strong signal something is off
+
+🧠 Why This Happened (Real Reasons)
+🔴 1. Dataset is VERY small
+28 rows only
+
+👉 With 3 features:
+
+Too little data → unstable model
+🔴 2. Colleges feature is misleading
+
+Your colleges values:
+
+13, 16, 31, 38...
+
+👉 These are NOT actual number of colleges
+
+They are:
+
+Sum of category counts (distribution buckets)
+
+👉 That ≠ real infrastructure
+
+🔴 3. Relationship is NOT linear
+
+Linear regression assumes:
+
+GER increases linearly with features
+
+👉 Real world:
+
+GER = complex, nonlinear function
+🔴 4. Scale mismatch
+students → millions  
+universities → tens  
+colleges → small numbers
+
+👉 Model struggles to balance these
+
+SO used RandomForest and also removed the use of the College feature so that it won't impact the final model's performance!
+obtained results after removing the college and using RandomForest:
+
+📊 Your Current Results (Random Forest)
+MAE ≈ 9.31   (slightly better ✔)
+R² ≈ 0.017   (still very low ❌)
+MAPE ≈ 54%   (high ❌)
+🧠 Interpretation (Important)
+✅ Improvement
+MAE dropped (10 → 9.3) → small gain
+❌ Still weak model
+R² ≈ 0 → model explains almost nothing
+Model is barely better than guessing average
+🚨 Root Problem (THIS is the real issue)
+You don’t have enough meaningful features
+
+Right now:
+
+GER = f(students + universities)
+
+👉 That’s too weak to explain GER
+
+🧠 Think Conceptually
+
+GER depends on:
+
+✔ Access (colleges, universities)
+✔ Capacity (faculty)
+✔ Population
+✔ Gender participation
+✔ Infrastructure
+
+👉 You are only using 2 weak signals
+
+
+#faculty sheet:
+The TOTAL teachers per state
+
+From your table:
+
+Grand Total → Total column
+🧠 Column Mapping (CRITICAL)
+
+Looking at your structure:
+
+Column 1 → state  
+Column 20 → Grand Total (Male)  
+Column 21 → Grand Total (Female)  
+Column 22 → Grand Total (Total) ✅
+
+used column 19 for faculty 
+
+and the output obtained was: 
+📊 Your Current Results
+MAE ≈ 11.28  
+R² ≈ -0.22  
+MAPE ≈ 62%
+🧠 Honest Interpretation
+
+👉 The model is still not reliable
+
+But look at this 👇
+
+Feature Importance:
+universities    0.50
+faculty         0.31
+students        0.18
+
+👉 This is VERY useful insight
+
+🎯 What You Did RIGHT
+✅ 1. Correct features
+
+You now have:
+
+students + universities + faculty ✔
+
+These are meaningful variables
+
+✅ 2. Model is learning something
+universities > faculty > students
+
+👉 That’s a valid real-world signal
+
+🚨 Why Model Still Performs Poorly
+🔴 1. Dataset is too small
+28 rows only
+
+👉 For ML, this is extremely small
+
+🔴 2. GER is influenced by MANY hidden factors
+
+You are missing:
+
+Population (VERY important)
+Age group (18–23 population)
+Gender ratio
+State policies
+Urbanization
+🔴 3. Scale differences
+students → millions  
+faculty → thousands  
+universities → tens
+
+👉 Model struggles with raw scale
+
+#added year feature to the pipeline for future works
+
+
