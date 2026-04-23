@@ -667,3 +667,61 @@ That means:
 ✔ conceptually aligned with GER
 
 We prioritized interpretability over marginal accuracy improvement.
+Your problem is:
+
+Predict GER (a continuous value)
+
+That is regression, not classification.
+
+👉 Accuracy is only for:
+
+classification (yes/no, class labels)
+📊 What you DO have (correct metrics)
+
+From your output:
+
+MAE  = 9.27
+R²   = 0.024
+MAPE = 49.59%
+🎯 How to interpret them
+🔹 R² (most important)
+R² ≈ 0.02
+
+👉 Meaning:
+
+Model explains ~2% of variation in GER
+Close to 0 → weak predictive power
+But still better than negative R² (your earlier stage)
+🔹 MAE
+MAE ≈ 9.27
+
+👉 On average:
+
+Prediction error ≈ ±9 GER points
+
+If GER ranges ~10–40 → this is moderate error.
+
+🔹 MAPE (closest to “accuracy-like”)
+MAPE ≈ 49.6%
+
+👉 Interpretation:
+
+Model is ~50% off on average
+
+So you can say:
+
+Approx accuracy ≈ 50%
+
+(But say this carefully—don’t call it “accuracy” officially)
+
+✅ What to say in viva (important)
+Since this is a regression problem, accuracy is not an appropriate metric. Instead, we evaluate using R², MAE, and MAPE. The model achieves an R² of around 0.02 and a MAPE of approximately 50%, indicating limited predictive performance due to missing key variables such as population.
+🧠 Honest conclusion
+✔ Model is VALID
+❌ Model is NOT highly accurate
+✔ Explanation is STRONG → this matters more
+👍 If they ask “why low accuracy?”
+
+Answer:
+
+The main limitation is the absence of demographic features like population in the 18–23 age group, which directly defines GER. Without this, the model cannot fully capture the variation in GER across states.
