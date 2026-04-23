@@ -405,3 +405,265 @@ Stage	R²
 current	~0
 multi-year	0.3 – 0.7
 
+We attempted automated feature subset selection, but results indicated that dataset size was insufficient for meaningful pattern learning. This led us to expand the dataset using multi-year data for better generalization.
+
+#attempted adding 2021 year data and testing the base model :
+obtained:
+((.venv) ) shreyascr5@Shreyass-MacBook-Air ml_project- % python3 main.py
+GER: (36, 2)
+STUDENTS: (36, 2)
+UNIVERSITIES: (33, 2)
+FACULTY: (36, 2)
+After GER + STUDENTS: (34, 3)
+After + UNIVERSITIES: (31, 4)
+After + FACULTY: (31, 5)
+2019: (28, 6)
+2021: (31, 6)
+
+FINAL DATA:
+               state        ger  students  universities  faculty  year
+0     Andhra Pradesh  29.377119   1897149            41      143  2019
+1  Arunachal Pradesh  35.211870     55816            10        7  2019
+2              Assam  22.545777    650601            26       35  2019
+3              Bihar  21.444663   1738432            35      268  2019
+4       Chhattisgarh  11.763714    586395            28      210  2019
+Shape: (59, 6)
+MAE: 10.846176588630017
+R2: -0.6719461962354243
+MAPE: 51.183114310056865
+
+Feature Importance:
+students_per_uni       0.377489
+faculty_per_student    0.203151
+universities           0.169600
+faculty                0.130500
+students               0.119260
+dtype: float64
+
+#Interpretation
+
+R² = -0.67
+
+That’s not just “low”—that means your model is doing worse than predicting the average GER. So tweaking hyperparameters won’t fix this. The issue is structural.
+
+🧠 Why your model is failing
+1) Dataset is tiny
+59 rows total
+→ after train/test → ~47 train, ~12 test
+
+That’s extremely small for a Random Forest.
+
+2) Features are weak proxies
+
+You’re using:
+
+students, universities, faculty
+
+But GER is:
+
+GER = (enrolled students / population age 18–23)
+
+👉 You don’t have population, so the model is guessing.
+
+3) Mixing years without temporal meaning
+
+You added year, but:
+
+2019 vs 2021 ≠ strong signal
+
+So model gets confused rather than helped.
+
+🎯 What’s actually GOOD in your result
+students_per_uni       → most important ✔
+faculty_per_student    → second ✔
+
+👉 This tells you:
+
+ratios > raw counts
+
+
+#updated the features and model :
+
+GER: (36, 2)
+STUDENTS: (36, 2)
+UNIVERSITIES: (33, 2)
+FACULTY: (36, 2)
+After GER + STUDENTS: (34, 3)
+After + UNIVERSITIES: (31, 4)
+After + FACULTY: (31, 5)
+2019: (28, 6)
+2021: (31, 6)
+
+FINAL DATA:
+               state        ger  ...  faculty  year
+0     Andhra Pradesh  29.377119  ...      143  2019
+1  Arunachal Pradesh  35.211870  ...        7  2019
+2              Assam  22.545777  ...       35  2019
+3              Bihar  21.444663  ...      268  2019
+4       Chhattisgarh  11.763714  ...      210  2019
+
+[5 rows x 6 columns]
+Shape: (59, 6)
+
+--- MODEL PERFORMANCE ---
+MAE: 9.274946210998804
+R2: 0.024438344513799226
+MAPE: 49.58592163479534
+
+Feature Coefficients:
+students_per_uni       0.726310
+faculty_per_student   -0.071381
+dtype: float64
+# Interpretation
+This is a much healthier result. Don’t dismiss it just because R² is small.
+
+R² ≈ 0.02  (previously -0.7)
+MAE ≈ 9.27
+MAPE ≈ 49%
+
+👉 You moved from “model is broken” → “model is weak but valid”
+That’s a big step.
+
+🧠 What your model is actually telling you
+Feature coefficients:
+students_per_uni       +0.726  ✔ strong positive
+faculty_per_student    -0.071  weak negative
+Interpretation (this is gold for your report):
+Higher students per university → higher GER
+More access / enrollment capacity → makes sense
+Faculty per student slightly negative
+Likely noise / small dataset artifact
+
+👉 This is real insight, not just numbers.
+
+🎯 How to present this (important for marks)
+
+Use something like:
+
+The model reveals that institutional capacity, represented by students per university
+
+
+
+#update
+We engineered ratio-based features
+like students per university and faculty
+per student, as they better 
+capture institutional capacity. 
+A linear regression model was chosen
+due to the small dataset size. 
+The model shows limited predictive 
+performance due to absence of 
+demographic variables such as population, 
+but provides useful insights into 
+infrastructure-related factors affecting GER.
+
+
+obtained 
+GER: (36, 2)
+STUDENTS: (36, 2)
+UNIVERSITIES: (33, 2)
+FACULTY: (36, 2)
+After GER + STUDENTS: (34, 3)
+After + UNIVERSITIES: (31, 4)
+After + FACULTY: (31, 5)
+Final Dataset Shape: (59, 6)
+
+--- MODEL PERFORMANCE ---
+MAE: 9.107
+R2: 0.027
+MAPE: 49.02
+
+Feature Coefficients:
+students_per_uni       1.057656
+faculty_per_student   -0.042061
+universities          -0.660999
+dtype: float64
+# Interpretation
+
+MAE ≈ 9.1
+R² ≈ 0.03
+MAPE ≈ 49%
+
+Not impressive on paper, but completely explainable and defensible, which matters more.
+
+🧠 How to interpret your final model (this is what evaluators care about)
+Coefficients:
+students_per_uni       +1.05  (strong positive)
+faculty_per_student    -0.04  (weak negative)
+universities           -0.66  (moderate negative)
+Meaning:
+students_per_uni ↑ → GER ↑
+More enrollment capacity per institution → better participation
+universities ↑ → GER ↓ (slightly counterintuitive)
+Likely because:
+smaller states → fewer universities but higher GER
+or uneven distribution across states
+faculty_per_student ~ negligible
+Not a strong driver in this dataset
+
+👉 This is insight, not just modeling.
+
+🎯 What you should say in viva (use this almost verbatim)
+We observed that ratio-based features 
+such as students per university 
+have a stronger relationship with 
+GER compared to absolute counts. 
+This suggests that institutional 
+capacity and accessibility influence higher 
+education participation. 
+However, the model performance remains 
+limited due to the absence of key demographic 
+variables such as the population in the 18–23 age 
+group, which directly defines GER. 
+Therefore, this work is better interpreted as 
+an analytical study of influencing factors 
+rather than a high-accuracy predictive model.
+
+
+For the same model i removed the universities feature
+and obtained the following :
+| Model Version     | Features Used    | R²     | Insight Quality         |
+| ----------------- | ---------------- | ------ | ----------------------- |
+| With universities | 3 features       | ~0.027 | Slightly better fit     |
+| Clean version     | 2 ratio features | ~0.024 | Better interpretation ✅ |
+
+GER: (36, 2)
+STUDENTS: (36, 2)
+UNIVERSITIES: (33, 2)
+FACULTY: (36, 2)
+After GER + STUDENTS: (34, 3)
+After + UNIVERSITIES: (31, 4)
+After + FACULTY: (31, 5)
+Final Dataset Shape: (59, 6)
+
+--- MODEL PERFORMANCE ---
+MAE: 9.275
+R2: 0.024
+MAPE: 49.59
+
+Feature Coefficients:
+students_per_uni       0.726310
+faculty_per_student   -0.071381
+dtype: float64
+
+The model was refined to use only ratio-based features, removing absolute features to reduce redundancy and improve interpretability. The results indicate that students per university is positively associated with GER, suggesting that institutional capacity plays a role in higher education participation. Faculty-to-student ratio shows minimal influence, indicating that infrastructure availability alone does not fully explain GER variations. The model performance remains modest due to the absence of key demographic variables such as population.
+R² ≈ 0.024
+MAE ≈ 9.27
+
+👉 Slight drop in R², but this is actually expected and acceptable.
+
+🧠 Why this version is “cleaner”
+
+Now your model is purely based on:
+
+students_per_uni
+faculty_per_student
+
+That means:
+
+✔ no redundant raw features
+✔ less multicollinearity
+✔ better interpretability
+✔ conceptually aligned with GER
+
+We prioritized interpretability over marginal accuracy improvement.
