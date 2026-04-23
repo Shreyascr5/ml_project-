@@ -3,22 +3,23 @@ import pandas as pd
 def get_2019_data(file):
 
     # =========================
-# GER (2019 FINAL FIX)
-# =========================
+    # GER (FINAL BULLETPROOF FIX)
+    # =========================
     df_ger = pd.read_excel(
         file,
         sheet_name="19GER",
-        header=[0, 1]   # multi-level header
+        skiprows=2   # IMPORTANT: use this instead of multi-header
     )
 
-    # rename properly
+    # rename safely
     df_ger = df_ger.rename(columns={
-        ('Unnamed: 1_level_0', 'Unnamed: 1_level_1'): 'state',
-        ('All Categories', 'Total'): 'ger'
+        df_ger.columns[1]: "state",        # State column
+        df_ger.columns[-1]: "ger"          # LAST column = All Total GER
     })
 
-    df_ger = df_ger[['state', 'ger']]
+    df_ger = df_ger[["state", "ger"]]
 
+    # clean
     df_ger = df_ger[df_ger["state"].notna()]
     df_ger["state"] = df_ger["state"].astype(str).str.strip()
 
